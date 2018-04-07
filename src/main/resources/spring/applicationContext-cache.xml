@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/cache 
+        http://www.springframework.org/schema/cache/spring-cache.xsd"
+	default-lazy-init="false" >
+	
+    <!-- spring自己的缓存管理器，这里定义了两个缓存位置名称 ，既注解中的value -->
+	<bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+		<property name="caches">
+			<set>
+				<bean
+					class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+					<property name="name" value="springcache" />
+				</bean>
+				<!--前台缓存-->
+				<bean
+					class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+					<property name="name" value="frontcache" />
+				</bean>
+			</set>
+		</property>
+	</bean>
+	
+	<!-- 启用缓存注解功能  @CacheEvict ，这个是必须的，否则注解不会生效 -->
+	<cache:annotation-driven cache-manager="cacheManager" />
+	
+	<bean id="cacheEncacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:ehcache.xml" />
+	</bean>
+	
+	<!-- ehcache 作为二级缓存，（当然也可以作为一级缓存），也可以选择 redis 中的 jedis 作为 二级缓存 -->
+	<!-- jedis 配置 -->
+	<!-- 
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxIdle" value="${redis.maxIdle}" />
+		<property name="maxWaitMillis" value="${redis.maxWait}" />
+		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
+	</bean>
+	 -->
+	<!-- redis工厂 -->
+	<!-- 
+	<bean id="jedisConnectionFactory"
+		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+		p:host-name="${redis.host}" p:port="${redis.port}" p:password="${redis.password}" p:database="${redis.db}" />
+	
+	
+	<bean id="cookieHttpSessionStrategy"
+		class="org.springframework.session.web.http.CookieHttpSessionStrategy">
+		<property name="cookieName" value="SESSIONID_HAP" />
+	</bean>
+	 -->
+	<!-- 这里的是为了下面的 Session策略过滤器提供构造函数传入的参数，因为Session过滤器要依赖该对象来构造，所以创建一个先 -->
+	<!-- 
+	<bean name="redisOperationsSessionRepository"
+		class="org.springframework.session.data.redis.RedisOperationsSessionRepository">
+		<constructor-arg ref="jedisConnectionFactory" />
+		<property name="defaultMaxInactiveInterval" value="86400" />
+	</bean>
+	 -->
+	<!-- 这个是Session策略过滤器，即将容器原有的Session持久化机制，代替为Spring的 Redis持久化Session机制。 -->
+	<!-- 注意，这个名字与 web.xml里的targetBean的下value是要一致的。 -->
+	<!-- 
+	<bean name="springSession" class="org.springframework.session.web.http.SessionRepositoryFilter">
+		<constructor-arg ref="redisOperationsSessionRepository" />
+		<property name="httpSessionStrategy" ref="cookieHttpSessionStrategy" />
+	</bean>
+
+	<bean id="stringRedisSerializer"
+          class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+          
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"> 
+		<property name="connectionFactory" ref="jedisConnectionFactory" />
+        <property name="keySerializer" ref="stringRedisSerializer"/>  
+	    <property name="valueSerializer" ref="stringRedisSerializer"/>  
+	    <property name="hashKeySerializer" ref="stringRedisSerializer"/>  
+	    <property name="hashValueSerializer" ref="stringRedisSerializer"/>  
+	</bean> 
+	 -->
+</beans>
+

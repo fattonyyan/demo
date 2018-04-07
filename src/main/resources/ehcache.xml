@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache updateCheck="false" name="secondCache">
+	<diskStore path="java.io.tmpdir/demo/ehcache" />
+	
+	<cache name="sysCache" 
+	    maxEntriesLocalHeap="2000" 
+	    eternal="false"
+		timeToIdleSeconds="3600" 
+		timeToLiveSeconds="0" 
+		overflowToDisk="false"
+		statistics="true">
+	</cache>
+	
+	<cache name="cmsCache" 
+	    maxElementsInMemory="100" 
+	    eternal="true" 
+	    overflowToDisk="true"/>
+</ehcache>
+

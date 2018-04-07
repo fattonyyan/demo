@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: demo
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: fattony
+Specification-Title: demo
+Implementation-Vendor-Id: com.yan
+Build-Jdk: 1.8.0_112
+Specification-Version: 0.0.1-SNAPSHOT
+Build-Version: 0.0.1-SNAPSHOT-2018-04-05T02:43:52Z
+Created-By: Maven Integration for Eclipse
+
