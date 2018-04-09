@@ -15,7 +15,7 @@ SpringMVC
 数据池 druid
 加密 Crypt
 AOP SpringAOP
-日志 slf4j+log4j
+日志 slf4j+logback
 
 数据库 MySQL
 
